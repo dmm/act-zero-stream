@@ -1,13 +1,10 @@
-pub mod stream;
-
 use std::error::Error;
 
 use act_zero::*;
+use act_zero_streams::StreamHandler;
 use async_trait::async_trait;
 use futures::executor::LocalPool;
 use futures_util::stream::once;
-
-use crate::stream::StreamHandler;
 
 struct SimpleGreeter {
     number_of_greets: i32,

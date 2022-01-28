@@ -21,10 +21,9 @@ where
     where
         S: Stream + Send + 'static,
         Self: StreamHandler<S::Item> + Sized,
-        S::Item: Send + Clone,
+        S::Item: Send,
     {
-        let addr2 = addr.clone();
-        addr2.send_fut(ActorStream::new(stream, addr))
+        addr.send_fut(ActorStream::new(stream, addr.clone()));
     }
 }
 
@@ -58,7 +57,7 @@ where
 impl<S, A> Future for ActorStream<S, A>
 where
     S: Stream,
-    S::Item: Clone + Send + 'static,
+    S::Item: Send + 'static,
     A: StreamHandler<S::Item>,
 {
     type Output = ();
@@ -88,5 +87,14 @@ where
         let a = this.actor.as_addr();
         send!(a.finished());
         Poll::Ready(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        let result = 2 + 2;
+        assert_eq!(result, 4);
     }
 }
